@@ -1,12 +1,12 @@
 #Import Flask modules
 
-#Create an object named app
+
+#Create an object named app 
 
 
 # Create a function named home which returns a string 'This is home page for no path, <h1> Welcome Home</h1>' 
 # and assign route of no path ('/')
 
-# Add a statement to run the Flask application
 
 
 # Create a function named about which returns a formatted string '<h1>This is my about page </h1>' 
