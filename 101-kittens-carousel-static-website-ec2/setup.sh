@@ -1,7 +1,7 @@
-#! /bin/bash
+#! /bin/bash -x
 
  yum update -y
- yum intsall httpd -y
+ yum install httpd -y
 
 cd /var/www/html
 
