@@ -2,13 +2,13 @@ AWSTemplateFormatVersion: 2010-09-09
 
 Description: |
   Build Roman numerals application
-
+  
 Parameters:
 
   LatestAmiId:
     Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
     Default: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64
-  
+
   InstanceTypes:
     Description: EC2 instance types
     Type: String
@@ -21,10 +21,10 @@ Parameters:
 
   Keypair:
     Description: Keypair for EC2 instance
-    Type: AWS::EC2::KeyPair::KeyName 
+    Type: AWS::EC2::KeyPair::KeyName
 
 Resources:
-  
+
   WebServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -50,10 +50,32 @@ Resources:
       KeyName: !Ref Keypair
       SecurityGroupIds: 
         - !GetAtt WebServerSecurityGroup.GroupId
-      UserData: "String"
+      UserData: !Base64 |
+        #!/bin/bash -x
+
+        yum update -y
+
+        yum install python3 -y
+        yum install pip -y
+        pip install flask
+
+        cd /home/ec2-user
+
+
+        FOLDER="https://raw.githubusercontent.com/tommyngogit/my-repository/main/001-roman-numerals-converter"
+        wget ${FOLDER}/app.py
+        mkdir templates
+        cd templates
+        wget ${FOLDER}/templates/index.html
+        wget ${FOLDER}/templates/result.html
+
+        cd ..
+        python3 app.py
       Tags: 
         - Key: Name
-          Value: roman-numerals-webserver
+          Value: tommy-roman-numerals-webserver
 
-
-#Outputs:
+Outputs:
+  WebsiteURL:
+    Description: URL for website 
+    Value: !Join ["", ["http://", !GetAtt WebServer.PublicDnsName]]
